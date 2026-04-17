@@ -1,0 +1,30 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com for more hooks
+repos:
+  - repo: https://github.com
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      # 阻止大文件提交（防止不小心把数据库文件传上去）
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      # 检查是否包含合并冲突留下的标志
+      - id: check-merge-conflict
+      # 核心：检查代码中是否包含私钥（Private Key）文件
+      - id: detect-private-key
+
+  # 🚀 重点：本地运行 Gitleaks
+  # 它会扫描你的 Staging Area（暂存区），发现 Key 就报错
+  - repo: https://github.com
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
+
+  # 🔍 可选：检查常见的 API 密钥和邮箱泄露
+  - repo: https://github.com
+    rev: v1.4.0
+    hooks:
+      - id: detect-secrets
+        args: ['--baseline', '.secrets.baseline']
